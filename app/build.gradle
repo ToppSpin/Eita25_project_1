@@ -1,0 +1,29 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+application {
+    mainClass = 'YOUR.PACKAGE.MainClass'
+}
+
+tasks.named('run') {
+    workingDir = rootProject.projectDir
+
+    standardInput = System.in
+
+    if (project.hasProperty('mainClass')) {
+        mainClass.set(project.property('mainClass').toString())
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

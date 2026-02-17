@@ -1,9 +1,10 @@
-import java.net.*;
+package mains;
+
 import java.io.*;
-import javax.net.ssl.*;
-import java.security.cert.X509Certificate;
+import java.math.BigInteger;
 import java.security.KeyStore;
 import java.security.cert.*;
+import javax.net.ssl.*;
 
 /*
  * This example shows how to set up a key manager to perform client
@@ -45,10 +46,11 @@ public class client {
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         SSLContext ctx = SSLContext.getInstance("TLSv1.2");
+        System.out.println("user.dir = " + System.getProperty("user.dir"));
         // keystore password (storepass)
-        ks.load(new FileInputStream("clientkeystore"), password);  
+        ks.load(new FileInputStream("stores/clientkeystore"), password);  
         // truststore password (storepass);
-        ts.load(new FileInputStream("clienttruststore"), password); 
+        ts.load(new FileInputStream("stores/clienttruststore"), password); 
         kmf.init(ks, password); // user password (keypass)
         tmf.init(ts); // keystore can be used as truststore here
         ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
@@ -70,7 +72,11 @@ public class client {
       SSLSession session = socket.getSession();
       Certificate[] cert = session.getPeerCertificates();
       String subject = ((X509Certificate) cert[0]).getSubjectX500Principal().getName();
+      String issuer = ((X509Certificate) cert[0]).getIssuerX500Principal().getName();
+      BigInteger serial = ((X509Certificate) cert[0]).getSerialNumber();
       System.out.println("certificate name (subject DN field) on certificate received from server:\n" + subject + "\n");
+      System.out.println("certificate name (Issuer DN field) on certificate received from server:\n" + issuer + "\n");
+      System.out.println("serial = \n" + serial + "\n");
       System.out.println("socket after handshake:\n" + socket + "\n");
       System.out.println("secure connection established\n\n");
 
