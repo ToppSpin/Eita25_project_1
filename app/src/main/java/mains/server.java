@@ -4,16 +4,25 @@ import java.io.*;
 import java.net.*;
 import javax.net.*;
 import javax.net.ssl.*;
+
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Optional;
+
+import Communication.RequestInputStream;
+import backend.AuthService;
+import backend.Messagehandler;
+import models.*;
 
 public class server implements Runnable {
   private ServerSocket serverSocket = null;
   private static int numConnectedClients = 0;
+  private Messagehandler msgHandler;
   
   public server(ServerSocket ss) throws IOException {
     serverSocket = ss;
+    msgHandler = Messagehandler.getInstance();
     newListener();
   }
 
@@ -27,22 +36,34 @@ public class server implements Runnable {
       numConnectedClients++;
       System.out.println("client connected");
       System.out.println("client name (cert subject DN field): " + subject);
+      System.out.println(subject);
+      System.out.println(subject);
+      System.out.println(subject);
       System.out.println(numConnectedClients + " concurrent connection(s)\n");
 
-      PrintWriter out = null;
-      BufferedReader in = null;
-      out = new PrintWriter(socket.getOutputStream(), true);
-      in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      ObjectOutputStream out = null;
+      RequestInputStream in = null;
+      out = new ObjectOutputStream(socket.getOutputStream());
+      in = new RequestInputStream(socket.getInputStream());
+      
+      Request clientMsg = null;
 
-      String clientMsg = null;
-      while ((clientMsg = in.readLine()) != null) {
-        String rev = new StringBuilder(clientMsg).reverse().toString();
-        System.out.println("received '" + clientMsg + "' from client");
-        System.out.print("sending '" + rev + "' to client...");
-        out.println(rev);
-        out.flush();
-        System.out.println("done\n");
+      
+      Optional<User> opUser = AuthService.CNtoUser(subject.substring(3));
+      if (opUser.isPresent()) {
+        User user = opUser.get();
+        while ((clientMsg = in.readObject()) != null) {
+          Response response = msgHandler.handle(clientMsg, user);
+          out.writeObject(response);
+          out.flush();
+          System.out.println("done\n");
+        }
+      } else {
+          Response response = new Response("User not found :(");
+          out.writeObject(response);
+          out.flush();
       }
+
       in.close();
       out.close();
       socket.close();
@@ -57,6 +78,7 @@ public class server implements Runnable {
   }
   
   private void newListener() { (new Thread(this)).start(); } // calls run()
+
   public static void main(String args[]) {
     System.out.println("\nServer Started\n");
     int port = -1;
@@ -82,8 +104,8 @@ public class server implements Runnable {
         SSLContext ctx = SSLContext.getInstance("TLSv1.2");
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-        KeyStore ks = KeyStore.getInstance("JKS");
-        KeyStore ts = KeyStore.getInstance("JKS");
+        KeyStore ks = KeyStore.getInstance("PKCS12");
+        KeyStore ts = KeyStore.getInstance("PKCS12");
         char[] password = "password".toCharArray();
         // keystore password (storepass)
         ks.load(new FileInputStream("stores/serverkeystore"), password);  

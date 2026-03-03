@@ -4,7 +4,10 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.KeyStore;
 import java.security.cert.*;
+
 import javax.net.ssl.*;
+
+import Communication.ResponseInputStream;
 
 /*
  * This example shows how to set up a key manager to perform client
@@ -16,6 +19,8 @@ import javax.net.ssl.*;
  */
 
 public class client {
+
+  private static BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
   public static void main(String[] args) throws Exception {
     String host = null;
     int port = -1;
@@ -40,18 +45,51 @@ public class client {
     try {
       SSLSocketFactory factory = null;
       try {
-        char[] password = "password".toCharArray();
-        KeyStore ks = KeyStore.getInstance("JKS");
-        KeyStore ts = KeyStore.getInstance("JKS");
+        KeyStore ks = KeyStore.getInstance("PKCS12");
+        KeyStore ts = KeyStore.getInstance("PKCS12");
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         SSLContext ctx = SSLContext.getInstance("TLSv1.2");
         System.out.println("user.dir = " + System.getProperty("user.dir"));
-        // keystore password (storepass)
-        ks.load(new FileInputStream("stores/clientkeystore"), password);  
-        // truststore password (storepass);
-        ts.load(new FileInputStream("stores/clienttruststore"), password); 
-        kmf.init(ks, password); // user password (keypass)
+        while (true) {
+          try {
+            String filePath = FilePicker.pickFile();
+            if (filePath == null) {
+              System.err.println("User cancelled");
+              continue;
+            }
+            System.out.println("Enter password: \n:");
+            char[] password = read.readLine().toCharArray();
+            FileInputStream fis = new FileInputStream(filePath);
+            // keystore password (storepass)
+            ks.load(fis, "password".toCharArray()); 
+            kmf.init(ks, "password".toCharArray());  // user password (keypass)
+            break;
+          } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+          } catch (IOException e) {
+            System.out.println("File not found");
+          }
+        }
+        while (true) {
+          try {
+            String filePath = FilePicker.pickFile();
+            if (filePath == null) {
+              System.err.println("User cancelled");
+              continue;
+            }
+            System.out.println("Enter password: \n:");
+            char[] password = read.readLine().toCharArray();
+            FileInputStream fis = new FileInputStream(filePath);
+            // truststore password (storepass)
+            ts.load(fis, "password".toCharArray());  
+            break;
+          } catch (FileNotFoundException e) {
+            
+          } catch (IOException e) {
+
+          }
+        }
         tmf.init(ts); // keystore can be used as truststore here
         ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
         factory = ctx.getSocketFactory();
@@ -81,21 +119,10 @@ public class client {
       System.out.println("secure connection established\n\n");
 
       BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-      PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-      BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      String msg;
-      for (;;) {
-        System.out.print(">");
-        msg = read.readLine();
-        if (msg.equalsIgnoreCase("quit")) {
-          break;
-        }
-        System.out.print("sending '" + msg + "' to server...");
-        out.println(msg);
-        out.flush();
-        System.out.println("done");
-        System.out.println("received '" + in.readLine() + "' from server\n");
-      }
+      ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+      ResponseInputStream in = new ResponseInputStream(socket.getInputStream());
+      clientHandler handler = new clientHandler(read, out, in);
+      handler.run();
       in.close();
       out.close();
       read.close();
