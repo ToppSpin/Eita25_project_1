@@ -11,7 +11,7 @@ public class Doctor extends User {
 
     @Override
     public boolean hasReadAccessTo(Record record) {
-        if (record.division.equalsIgnoreCase(division)) {
+        if (record.division.equalsIgnoreCase(division) || record.doctor_id == id) {
             return true;
         }
         return false;

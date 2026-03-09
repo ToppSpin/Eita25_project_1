@@ -1,6 +1,3 @@
-# Makefile — generate mutual TLS material (CA, server, 5 named clients) into ./stores
-# Passwords are set to "password" to match your Java code.
-
 SHELL := /bin/bash
 
 STORES := stores

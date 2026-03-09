@@ -62,13 +62,13 @@ public class client {
             char[] password = read.readLine().toCharArray();
             FileInputStream fis = new FileInputStream(filePath);
             // keystore password (storepass)
-            ks.load(fis, "password".toCharArray()); 
-            kmf.init(ks, "password".toCharArray());  // user password (keypass)
+            ks.load(fis, password); 
+            kmf.init(ks, password);  // user password (keypass)
             break;
           } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            System.out.println(e.getMessage());
           } catch (IOException e) {
-            System.out.println("File not found");
+            System.out.println(e.getMessage());
           }
         }
         while (true) {
@@ -82,7 +82,7 @@ public class client {
             char[] password = read.readLine().toCharArray();
             FileInputStream fis = new FileInputStream(filePath);
             // truststore password (storepass)
-            ts.load(fis, "password".toCharArray());  
+            ts.load(fis, password);  
             break;
           } catch (FileNotFoundException e) {
             

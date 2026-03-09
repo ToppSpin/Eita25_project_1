@@ -26,9 +26,13 @@ public class Record implements Comparable<Record> {
         return this.name.compareTo(other.name);
     }
 
+    public String Data() {
+        return (String.join("\n", data));
+    }
+
     @Override
     public String toString() {
-        return (String.join("\n", data));
+        return name + " -- " + division;
     }
 
     public void addEntry(String text) {

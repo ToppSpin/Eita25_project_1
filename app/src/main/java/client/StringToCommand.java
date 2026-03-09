@@ -15,7 +15,6 @@ public class StringToCommand {
                     req = new Request(RequestType.Create);
                     req.data.put("name", args[1]);
                     req.data.put("nurse", args[2]);
-                    System.out.println(args[0] + args[1] + args[2]);
                     return req;
                 case "delete":
                     req = new Request(RequestType.Delete);

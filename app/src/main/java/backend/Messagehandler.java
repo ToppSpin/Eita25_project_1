@@ -95,6 +95,6 @@ public class Messagehandler {
             .map(rec -> rec.toString())
             .toList();
 
-            return new Response("-- " + String.join("-- ", records));
+            return new Response(String.join("\n-- ", records));
     }
 }

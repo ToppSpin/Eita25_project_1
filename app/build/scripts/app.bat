@@ -70,7 +70,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\app.jar
+set CLASSPATH=%APP_HOME%\lib\app.jar;%APP_HOME%\lib\jline-3.26.1.jar
 
 
 @rem Execute app

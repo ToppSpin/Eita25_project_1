@@ -1,5 +1,24 @@
-2026-03-03T16:10:26.773143536 : User: Alice Created Record for: Charlie and with Nurse: Bob
-2026-03-03T16:10:52.131819951 : User: Alice Wrote to record for patient: Charlie in division: radeology
-2026-03-03T16:12:59.396296805 : User: Alice Read record of patient: Charlie in division: radeology
-2026-03-03T16:13:16.871451282 : User: Alice Wrote to record for patient: Charlie in division: radeology
-2026-03-03T16:13:29.343866278 : User: Alice Read record of patient: Charlie in division: radeology
+2026-03-04T16:21:54.378170118 : User: Alice Created Record for: Charlie and with Nurse: Bob
+2026-03-04T16:22:34.728841251 : User: Alice Read record of patient: Charlie in division: radeology
+2026-03-04T16:22:50.552989196 : User: Alice Wrote to record for patient: charlie in division: radeology
+2026-03-04T16:22:59.818466802 : User: Alice Read record of patient: charlie in division: radeology
+2026-03-04T16:23:14.248028588 : User: Alice tried to delete record for patient: charlie in division radeologyError was: Access denied
+2026-03-04T16:24:24.206382634 : User: Bob tried to read record of patient: Chalire in division RadeologyError was: patient has no record here
+2026-03-04T16:24:35.736245025 : User: Bob Read record of patient: Charlie in division: radeology
+2026-03-04T16:24:52.435263391 : User: Bob Wrote to record for patient: Charlie in division: Radeology
+2026-03-04T16:25:01.368397594 : User: Bob Read record of patient: charlie in division: radeology
+2026-03-04T16:25:23.346514312 : User: Bob tried to delete record for patient: charlie in division radeologyError was: Access denied
+2026-03-04T16:26:17.337815949 : User: David Created Record for: Charlie and with Nurse: Bob
+2026-03-04T16:26:29.840247986 : User: David Read record of patient: Charlie in division: kids
+2026-03-04T16:26:53.976685003 : User: David Wrote to record for patient: Charlie in division: kids
+2026-03-04T16:27:02.722954103 : User: David Read record of patient: charlie in division: kids
+2026-03-04T16:27:57.498966323 : User: Charlie Read record of patient: charlie in division: radeology
+2026-03-04T16:28:09.113530993 : User: Charlie Read record of patient: charlie in division: kids
+2026-03-04T16:28:25.616255948 : User: Charlie tried to write to record for patient: charlie in division radeologyError was: Access denied
+2026-03-04T16:28:36.823969880 : User: Charlie tried to delete record for patient: charlie in division kidsError was: Access denied
+2026-03-04T16:29:06.102328641 : User: Bob Read record of patient: charlie in division: kids
+2026-03-04T16:29:12.848337066 : User: Bob Read record of patient: charlie in division: radeology
+2026-03-04T16:29:20.471641159 : User: Bob tried to delete record for patient: charlie in division kidsError was: Access denied
+2026-03-04T16:30:04.707425644 : User: Eva Deleted record for patient: charlie in division: kids
+2026-03-04T16:30:15.278139561 : User: Eva Read record of patient: charlie in division: radeology
+2026-03-04T16:32:27.533238199 : User: Charlie tried to delete record for patient: charlie in division radeologyError was: Access denied
