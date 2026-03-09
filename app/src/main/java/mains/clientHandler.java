@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import Communication.ResponseInputStream;
 import client.StringToCommand;
 import models.Request;
+import models.Response;
 
 public class clientHandler {
 
@@ -24,7 +25,6 @@ public class clientHandler {
             String msg;
             Request req;
             while (true) {
-
                 System.out.print(">");
                 msg = read.readLine();
                 if (msg.equalsIgnoreCase("quit")) {
@@ -38,7 +38,8 @@ public class clientHandler {
                 }
                 out.writeObject(req);
                 out.flush();
-                System.out.println(in.readObject().toString());   
+                Response res = in.readObject();
+                System.out.println(res);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());

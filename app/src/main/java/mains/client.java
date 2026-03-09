@@ -19,8 +19,6 @@ import Communication.ResponseInputStream;
  */
 
 public class client {
-
-  private static BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
   public static void main(String[] args) throws Exception {
     String host = null;
     int port = -1;
@@ -53,41 +51,26 @@ public class client {
         System.out.println("user.dir = " + System.getProperty("user.dir"));
         while (true) {
           try {
-            String filePath = FilePicker.pickFile();
-            if (filePath == null) {
+            String filePath1 = FilePicker.pickFile();
+            if (filePath1 == null) {
               System.err.println("User cancelled");
               continue;
             }
-            System.out.println("Enter password: \n:");
-            char[] password = read.readLine().toCharArray();
-            FileInputStream fis = new FileInputStream(filePath);
+            String filePath2 = FilePicker.pickFile();
+            if (filePath2 == null) {
+              System.err.println("User cancelled");
+              continue;
+            }
+            char[] password = PasswordDialog.ShowDialog();
+            FileInputStream fis1 = new FileInputStream(filePath1);
+            FileInputStream fis2 = new FileInputStream(filePath2);
             // keystore password (storepass)
-            ks.load(fis, password); 
+            ks.load(fis1, password); 
+            ts.load(fis2, password); 
             kmf.init(ks, password);  // user password (keypass)
             break;
-          } catch (FileNotFoundException e) {
+          } catch (Exception e) {
             System.out.println(e.getMessage());
-          } catch (IOException e) {
-            System.out.println(e.getMessage());
-          }
-        }
-        while (true) {
-          try {
-            String filePath = FilePicker.pickFile();
-            if (filePath == null) {
-              System.err.println("User cancelled");
-              continue;
-            }
-            System.out.println("Enter password: \n:");
-            char[] password = read.readLine().toCharArray();
-            FileInputStream fis = new FileInputStream(filePath);
-            // truststore password (storepass)
-            ts.load(fis, password);  
-            break;
-          } catch (FileNotFoundException e) {
-            
-          } catch (IOException e) {
-
           }
         }
         tmf.init(ts); // keystore can be used as truststore here
