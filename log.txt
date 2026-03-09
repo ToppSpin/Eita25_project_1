@@ -1,3 +1,2 @@
-2026-03-09T18:52:50.149238761 : User: Alice Created Record for: Charlie and with Nurse: Bob
-2026-03-09T18:53:16.925518581 : User: Alice Wrote to record for patient: Charlie in division: Radeology
-2026-03-09T18:53:25.818323446 : User: Alice Read record of patient: Charlie in division: Radeology
+2026-03-09T19:11:52.197957069 : User: Alice Created Record for: Charlie and with Nurse: Bob
+2026-03-09T19:14:20.687282879 : User: Alice Wrote to record for patient: Charlie in division: Radiology
