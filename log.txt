@@ -1,2 +1,4 @@
-2026-03-09T19:11:52.197957069 : User: Alice Created Record for: Charlie and with Nurse: Bob
-2026-03-09T19:14:20.687282879 : User: Alice Wrote to record for patient: Charlie in division: Radiology
+2026-03-10T11:24:17.686210628 : User: Alice Created Record for: Charlie and with Nurse: Bob
+2026-03-10T11:24:45.562136172 : User: Alice Wrote to record for patient: Charlie in division: Radiology
+2026-03-10T11:24:53.501659512 : User: Alice Read record of patient: Charlie in division: Radiology
+2026-03-10T11:25:01.999584144 : User: Alice tried to delete record for patient: Charlie in division RadiologyError was: Access denied

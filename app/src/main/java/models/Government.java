@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Map;
+
 public class Government extends User{
 
     public Government(int id, String name) {
@@ -17,12 +19,12 @@ public class Government extends User{
     }
 
     @Override
-    public boolean hasDeleteAccessTo() {
+    public boolean hasDeleteAccess() {
         return true;
     }
 
     @Override
-    public boolean hasCreateAccess() {
+    public boolean hasCreateAccess(Map<String, String> treats, String patient) {
         return false;
     }
 }

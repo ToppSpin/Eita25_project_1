@@ -48,7 +48,7 @@ public class Messagehandler {
 
     private Response Create(User user, Request req) {
         Result result = db.Create(user, req.data.get("name"), req.data.get("nurse"));
-        if (result.status() == true) {
+        if (result.status()) {
             log.Log("User: " + user.name + " Created Record for: " + req.data.get("name") + " and with Nurse: " + req.data.get("nurse"));
         } else {
             log.Log("User: " + user.name + " tried to create record for patient: " + req.data.get("name") + " with nurse: " + req.data.get("nurse") + " Error was: " + result.text());
@@ -58,7 +58,7 @@ public class Messagehandler {
 
     private Response Delete(User user, Request req) {
         Result result = db.Delete(user, req.data.get("name"), req.data.get("division"));
-        if (result.status() == true) {
+        if (result.status()) {
             log.Log("User: " + user.name + " Deleted record for patient: " + req.data.get("name") + " in division: " + req.data.get("division"));
         } else {
             log.Log("User: " + user.name + " tried to delete record for patient: " + req.data.get("name") + " in division " + req.data.get("division") + "Error was: " + result.text());
@@ -68,7 +68,7 @@ public class Messagehandler {
 
     private Response Read(User user, Request req) {
         Result result = db.Read(user, req.data.get("name"), req.data.get("division"));
-        if (result.status() == true) {
+        if (result.status()) {
             log.Log("User: " + user.name + " Read record of patient: " + req.data.get("name") + " in division: " + req.data.get("division"));
         } else {
             log.Log("User: " + user.name + " tried to read record of patient: " + req.data.get("name") + " in division " + req.data.get("division") + "Error was: " + result.text());
@@ -78,7 +78,7 @@ public class Messagehandler {
 
     private Response Write(User user, Request req) {
         Result result = db.Write(user, req.data.get("name"), req.data.get("division"), req.data.get("text"));
-        if (result.status() == true) {
+        if (result.status()) {
             log.Log("User: " + user.name + " Wrote to record for patient: " + req.data.get("name") + " in division: " + req.data.get("division"));
         } else {
             log.Log("User: " + user.name + " tried to write to record for patient: " + req.data.get("name") + " in division " + req.data.get("division") + "Error was: " + result.text());

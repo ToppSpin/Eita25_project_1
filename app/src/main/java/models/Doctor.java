@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Map;
+
 public class Doctor extends User {
 
     public String division;
@@ -26,12 +28,12 @@ public class Doctor extends User {
     }
 
     @Override
-    public boolean hasDeleteAccessTo() {
+    public boolean hasDeleteAccess() {
         return false;
     }
 
     @Override
-    public boolean hasCreateAccess() {
-        return true;
+    public boolean hasCreateAccess(Map<String, String> treats, String patient) {
+        return treats.values().stream().anyMatch(name -> name.equalsIgnoreCase(patient));
     }
 }

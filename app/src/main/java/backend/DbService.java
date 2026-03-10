@@ -57,12 +57,12 @@ public class DbService {
     }
 
 
-    public Result Create(User user, String name, String nurse) {
+    public Result Create(User user, String patient, String nurse) {
         String result;
 
-        if (!user.hasCreateAccess()) {
+        if (!user.hasCreateAccess(treats, patient)) {
             result = "Access Denied";
-        } 
+        }
         else if (
             users.values()
                 .stream()
@@ -76,7 +76,7 @@ public class DbService {
             users.values()
                 .stream()
                 .noneMatch(u -> u.getClass().equals(Patient.class) && 
-                            u.name.equalsIgnoreCase(name))
+                            u.name.equalsIgnoreCase(patient))
         ) {
             result = "Patient name was not present in database";
 
@@ -85,24 +85,16 @@ public class DbService {
             records
                 .stream()
                 .anyMatch(rec ->
-                            rec.name.equalsIgnoreCase(name) && 
+                            rec.name.equalsIgnoreCase(patient) && 
                             rec.division.equalsIgnoreCase(((Doctor) user).division))
         ) {
             result = "Patient already has a record in your division";
 
-        } 
-        else if (
-            treats.entrySet()
-                .stream()
-                .noneMatch(e -> e.getKey().equalsIgnoreCase(user.name) && e.getValue().equalsIgnoreCase(name))
-        ) {
-            result = "Docter not treating this patient";
-
-        } else {
+        }  else {
             records.add(
                 new Record(
-                    name,
-                    users.get(name).id,
+                    patient,
+                    users.get(patient).id,
                     user.id,
                     users.get(nurse).id,
                     ((Doctor) user).division
@@ -116,76 +108,48 @@ public class DbService {
 
 
     public Result Delete(User user, String name, String division) {
-        String result;
-
-        if (!user.hasDeleteAccessTo()) {
-            result = "Access denied";
-
-        } else if (
-            !records.removeIf(
-                rec ->
-                    rec.name.equalsIgnoreCase(name)
-                        && rec.division.equalsIgnoreCase(division)
-            )
-        ) {
-            result = "No such record";
-
-        } else {
+        if (!user.hasDeleteAccess()) {
+            return new Result(false, "Access denied");
+        } 
+        
+        if (!records.removeIf(rec ->
+                                rec.name.equalsIgnoreCase(name) &&
+                                rec.division.equalsIgnoreCase(division))) 
+        {
             return new Result(true, "Record has been deleted");
         }
-
-        return new Result(false, result);
+        return new Result(false, "no such record");
     }
 
 
     public Result Read(User user, String name, String division) {
-        String result;
-
-        List<Record> recordList = 
-        records
-            .stream()
+        Optional<Record> record = records.stream()
             .filter(rec -> 
                         rec.name.equalsIgnoreCase(name) && 
                         rec.division.equalsIgnoreCase(division))
-            .toList();
+            .findFirst();
 
-        if (recordList.isEmpty()) {
-            result = "patient has no record here";
-
-        } else if (!user.hasReadAccessTo(recordList.get(0))) {
-            result = "Access denied";
-
-        } else {
-            return new Result(true, recordList.get(0).Data());
+        if (record.isPresent() && user.hasReadAccessTo(record.get())) {
+            return new Result(true, record.get().Data());
         }
-
-        return new Result(false, result);
+        return new Result(false, "Access denied or no record here matches search");
     }
 
 
     public Result Write(User user, String name, String division, String text) {
-        String result;
-
-        List<Record> recordList = records.stream()
+        Optional<Record> record = records.stream()
             .filter(
                 rec ->
                     rec.name.equalsIgnoreCase(name) && 
                     rec.division.equalsIgnoreCase(division)
             )
-            .toList();
+            .findFirst();
 
-        if (recordList.isEmpty()) {
-            result = "no record here matches search";
-
-        } else if (!user.hasWriteAccessTo(recordList.get(0))) {
-            result = "Access denied";
-
-        } else {
-            recordList.get(0).addEntry(text);
+        if (record.isPresent() && user.hasWriteAccessTo(record.get())) {
+            record.get().addEntry(text);
             return new Result(true, "Info has been written to patient record");
-        }
-
-        return new Result(false, result);
+        } 
+        return new Result(false, "Access denied or no record here matches search");
     }
 
 
